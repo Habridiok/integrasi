@@ -8,7 +8,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({ //Seperti repository
   state: {
     count: 0,
-    films: []
+    customers: [],
+    CustomerByAddress: []
   },
   mutations: { //Yang ngehandle perubahan dari state, ini seperti service
     increment (state) {
@@ -19,25 +20,38 @@ const store = new Vuex.Store({ //Seperti repository
     	axios.get(URL)
 					.then(response => {
 						console.log('Hi im response', response.data)
-						state.films = response.data
+						state.customers = response.data
 					})
 					.catch(error => {
 						console.log(error)
 					})
+    },
+    getDataByCustomer (state, customerId) {
+    const URL = '/api/customers/'+customerId+'/address'
+      axios.get(URL)
+          .then(response => {
+            console.log('Hi im response', response.data)
+            state.CustomerByAddress = response.data
+          })
+          .catch(error => {
+            console.log(error)
+          })
     }
-
   },
   getters: { // Untuk mengambil nilai dari state
   	getCount: (state) => {
   		return state.count
   	},
-  	getFilms: (state) => {
-  		return state.films
-  	}
+  	getCustomers: (state) => {
+  		return state.customers
+  	},
+    getCustomersByAddress: (state) => {
+      return state.customers
+    }
   },
   actions: {
   	doAlert: () => {
-  		alert("hi im am alert from the same action")
+  		// alert("hi im am alert from the same action")
   	},
   	doIncrement: ({commit , dispatch}) => {
   		commit('increment'),
@@ -45,7 +59,11 @@ const store = new Vuex.Store({ //Seperti repository
   	},
   	getData: ({commit}) => {
   		commit('getData')
-  	}
+  	},
+    getDataByCustomer: ({commit, customerId}) => {
+      commit('getCustomersByAddress('+ customerId +')')
+      alert(customerId) 
+    }
   }
 })
 
